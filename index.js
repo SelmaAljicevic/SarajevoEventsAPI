@@ -43,7 +43,7 @@ app.get("/", (req, res, next) => {
   res.json({
     name: "Elma NodeJSq API Server",
     version: "1.0.1",
-    newChange: "new Change",
+    newChange: "new Change test",
   });
 });
 
