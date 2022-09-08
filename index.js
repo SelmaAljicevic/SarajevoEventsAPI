@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const UserModel = require("./models/UserModel");
+// const UserModel = require("./models/UserModel");
 const express = require("express");
 const app = express();
 
@@ -8,12 +8,12 @@ require("dotenv").config();
 
 async function main() {
   try {
-    mongoose.connect(process.env.MONGO_URI);
-    const user = new UserModel();
-    user.username = "selma";
-    user.password = "selma123";
-    user.role = "admin";
-    await user.save();
+    // mongoose.connect(process.env.MONGO_URI);
+    // const user = new UserModel();
+    // user.username = "selma";
+    // user.password = "selma123";
+    // user.role = "admin";
+    // await user.save();
   } catch (err) {
     console.log("Connection error");
   }
@@ -33,9 +33,18 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res, next) => {
+  var ipAddr = req.headers["x-forwarded-for"];
+  if (ipAddr) {
+    var list = ipAddr.split(",");
+    ipAddr = list[list.length - 1];
+  } else {
+    ipAddr = req.connection.remoteAddress;
+  }
+
   res.json({
     name: "Elma NodeJSq API Server",
     version: "1.0.1",
+    ipAddr,
   });
 });
 
