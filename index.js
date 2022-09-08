@@ -33,18 +33,10 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res, next) => {
-  var ipAddr = req.headers["x-forwarded-for"];
-  if (ipAddr) {
-    var list = ipAddr.split(",");
-    ipAddr = list[list.length - 1];
-  } else {
-    ipAddr = req.connection.remoteAddress;
-  }
-
   res.json({
     name: "Elma NodeJSq API Server",
     version: "1.0.1",
-    ipAddr,
+    newChange: "new Change",
   });
 });
 
