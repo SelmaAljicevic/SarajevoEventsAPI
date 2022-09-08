@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const UserModel = require("./models/UserModel");
 const express = require("express");
+
+const UserModel = require("./models/UserModel");
+const EventModel = require("./models/EventModel");
+
+const events = require("./events.seed");
+
 const app = express();
 
 require("dotenv").config();
@@ -9,11 +14,13 @@ require("dotenv").config();
 async function main() {
   try {
     mongoose.connect(process.env.MONGO_URI);
-    const user = new UserModel();
-    user.username = "selma";
-    user.password = "selma123";
-    user.role = "admin";
-    await user.save();
+
+    events.forEach((e) => {
+      const event = new EventModel();
+      event.place = e.place;
+      event.text = e.text;
+      event.save();
+    });
   } catch (err) {
     console.log("Connection error");
   }
