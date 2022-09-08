@@ -26,7 +26,7 @@ main().catch((err) => console.log("MongoDB Error:", err));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
   console.log(`ElmaServer running on port: localhost:${port}.`);
