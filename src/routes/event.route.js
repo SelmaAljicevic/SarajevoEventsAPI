@@ -7,13 +7,26 @@ import { EventModel } from "../models/EventModel.js";
 const router = Router();
 
 router.get("/", async (req, res) => {
-  const query = new QueryModel(req.query);
+  const query = new QueryModel(req.query).getParams();
 
-  const dbQuery = createQuery(EventModel, query.getParams());
-  const countDbQuery = createQuery(EventModel, query.getParams(), true);
+  const dbQuery = createQuery(query, false);
+  const countDbQuery = createQuery(query, false);
 
-  const events = await dbQuery();
-  const count = await countDbQuery();
+  if (req.query.category) {
+    dbQuery.push([
+      { $match: { category: req.query.category } },
+      { $skip: query.pageSize * (query.pageNumber - 1) },
+      { $limit: parseInt(query.pageSize) },
+    ]);
+
+    countDbQuery.push([
+      { $match: { category: req.query.category } },
+      { $count: "total" },
+    ]);
+  }
+
+  const events = await EventModel.aggregate(dbQuery);
+  const count = await EventModel.aggregate(countDbQuery);
 
   return res.json({ list: events, total: count[0]?.total, status: 200 });
 });
