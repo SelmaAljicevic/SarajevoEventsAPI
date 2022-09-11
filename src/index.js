@@ -26,6 +26,8 @@ connectDB();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.get("/", (_req, res) => res.send("Server is running"));
+
 // set up routes
 app.use("/api/v1", webRouter);
 
