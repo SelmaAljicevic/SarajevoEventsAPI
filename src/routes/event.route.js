@@ -10,9 +10,12 @@ router.get("/", async (req, res) => {
   const query = new QueryModel(req.query);
 
   const dbQuery = createQuery(EventModel, query.getParams());
-  const events = await dbQuery();
+  const countDbQuery = createQuery(EventModel, query.getParams(), true);
 
-  return res.json({ list: events, status: 200 });
+  const events = await dbQuery();
+  const count = await countDbQuery();
+
+  return res.json({ list: events, total: count[0]?.total, status: 200 });
 });
 
 router.get("/:id", async (req, res) => {
