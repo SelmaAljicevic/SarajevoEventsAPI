@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 import { webRouter } from "./routes/index.js";
 
@@ -22,6 +23,8 @@ const connectDB = () => {
 };
 
 connectDB();
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
