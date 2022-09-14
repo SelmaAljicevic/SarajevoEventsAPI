@@ -4,7 +4,7 @@ export const createQuery = (
   { pageNumber, pageSize, sortBy, order, filter: _filter },
   withPaging = true
 ) => {
-  const pipelines = [];
+  let pipelines = [];
 
   // TODO: add filtering on string properties for the query
 
