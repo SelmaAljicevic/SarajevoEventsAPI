@@ -5,13 +5,15 @@ export class QueryModel {
   #pageSize = 10;
   #sortBy = "";
   #order = SORT_ORDER.ASC;
+  #key = "";
   #filter = "";
 
-  constructor({ pageNumber, pageSize, sortBy, order, filter }) {
+  constructor({ pageNumber, pageSize, sortBy, order, key, filter }) {
     this.#pageNumber = pageNumber || 1;
     this.#pageSize = pageSize || 10;
     this.#sortBy = sortBy || "";
     this.#order = order || SORT_ORDER.ASC;
+    this.#key = key || "";
     this.#filter = filter || "";
   }
 
@@ -21,6 +23,7 @@ export class QueryModel {
       pageSize: this.#pageSize,
       sortBy: this.#sortBy,
       order: this.#order,
+      key: this.#key,
       filter: this.#filter,
     };
   };

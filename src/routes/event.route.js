@@ -1,35 +1,30 @@
 import { Router } from "express";
 
-import { createQuery } from "../helpers/createQuery.js";
+import {
+  getFilteringPipelines,
+  getPaginationWithCount,
+  getSortingPipelines,
+} from "../helpers/queryBuilders.js";
 import { QueryModel } from "../classes/QueryModel.js";
 import { EventModel } from "../models/EventModel.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
-  const query = new QueryModel(req.query);
+  const query = new QueryModel(req.query).getParams();
 
-  const dbQuery = createQuery(query.getParams(), false);
-  const countDbQuery = createQuery(query.getParams(), false);
+  const queryPipelines = [
+    ...getFilteringPipelines(query),
+    ...getSortingPipelines(query),
+    ...getPaginationWithCount(query),
+  ];
 
-  const queryParams = query.getParams();
+  const [response] = await EventModel.aggregate(queryPipelines);
 
-  if (req.query.category) {
-    // dbQuery.push({ $match: { category: req.query.category } });
-    countDbQuery.push({ $match: { category: req.query.category } });
-  }
-
-  dbQuery.push([
-    { $skip: queryParams.pageSize * (queryParams.pageNumber - 1) },
-    { $limit: parseInt(queryParams.pageSize) },
-  ]);
-
-  countDbQuery.push({ $count: "total" });
-
-  const events = await EventModel.aggregate(dbQuery);
-  const count = await EventModel.aggregate(countDbQuery);
-
-  return res.json({ list: events, total: count[0]?.total, status: 200 });
+  return res.json({
+    list: response.list,
+    total: response.total[0].total,
+  });
 });
 
 router.get("/:id", async (req, res) => {
