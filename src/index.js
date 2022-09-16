@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import { webRouter } from "./routes/index.js";
+import { events } from "./seeds/events.seed.js";
+import { EventModel } from "./models/EventModel.js";
+import { seedDb } from "./helpers/seedDb.js";
 
 const app = express();
 dotenv.config();
@@ -12,7 +15,10 @@ dotenv.config();
 const connectDB = () => {
   mongoose
     .connect(process.env.MONGO_URI)
-    .then(() => console.log("Database connected."))
+    .then(() => {
+      // seedDb(events, EventModel);
+      console.log("Database connected.");
+    })
     .catch(() => console.log("Database connection error"));
 };
 
