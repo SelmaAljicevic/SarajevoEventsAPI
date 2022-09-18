@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
   return res.json({ event, status: 200 });
 });
 
-router.put("/", authMiddleware, async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   if (res.statusCode === 403) return res.send("Forbbiden");
 
   const event = new EventModel(req.body);
