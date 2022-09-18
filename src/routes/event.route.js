@@ -5,6 +5,7 @@ import {
   getPaginationWithCount,
   getSortingPipelines,
 } from "../helpers/queryBuilders.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { QueryModel } from "../classes/QueryModel.js";
 import { EventModel } from "../models/EventModel.js";
 
@@ -35,13 +36,17 @@ router.get("/:id", async (req, res) => {
   return res.json({ event, status: 200 });
 });
 
-router.put("/", async (req, res) => {
+router.put("/", authMiddleware, async (req, res) => {
+  if (res.statusCode === 403) return res.send("Forbbiden");
+
   const event = new EventModel(req.body);
   await event.save();
   return res.json({ event: event, status: 201 });
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authMiddleware, async (req, res) => {
+  if (res.statusCode === 403) return res.send("Forbbiden");
+
   const event = await EventModel.findByIdAndUpdate(req.params.id, req.body);
 
   if (!event) return res.json({ event: null, status: 404 });
@@ -49,7 +54,9 @@ router.patch("/:id", async (req, res) => {
   return res.json({ event, status: 204 });
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res) => {
+  if (res.statusCode === 403) return res.send("Forbbiden");
+
   const id = req.params.id;
 
   const event = await EventModel.findByIdAndDelete(id);
