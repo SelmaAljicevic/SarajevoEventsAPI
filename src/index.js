@@ -5,9 +5,6 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import { webRouter } from "./routes/index.js";
-import { events } from "./seeds/events.seed.js";
-import { EventModel } from "./models/EventModel.js";
-import { seedDb } from "./helpers/seedDb.js";
 
 const app = express();
 dotenv.config();
